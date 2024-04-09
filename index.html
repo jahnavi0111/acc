@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accident Detection</title>
+
+</head>
+<body>
+    <div class="d1">
+        <h1>Accident Detection</h1>
+    </div>
+    <div class="xyz">
+        <div class="abc">Join Us To Detect Accidents Instantly.</div>
+        <img src="https://i.pinimg.com/564x/07/03/ab/0703abff044a0fba59be88c508e081e2.jpg">
+    </div>
+    <div class="d2">
+        <input type="file" accept="video/*" id="videoIn"><br><br><br><br>
+        <button class="btn" onclick="process()">Detect Accident</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        function process() {
+            const videoIn = document.getElementById('videoIn');
+            const file = videoIn.files[0];
+
+            if (!file) {
+                alert("Please select a video file.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('video', file);
+
+            fetch('/detect_accident', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                if (data.accidentDetected) {
+                    resultDiv.innerText = "Accident detected";
+                    resultDiv.style.color = "red"; 
+                } else {
+                    resultDiv.innerText = "No accident detected";
+                    resultDiv.style.color = "green";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
